@@ -14,9 +14,9 @@ class PartyYear(View):
 		:param year: year of the asset declaration.
 		:param party_slug: slug value of the Party.
 		'''
-		query = {'party.slug': mp_name_slug, 'year': year}
+		query = {'party.slug': party_slug, 'year': year}
 
-		declaration = mongo.db.mpassetdeclarations.find_one(query).sort([
+		declaration = mongo.db.mpassetdeclarations.find(query).sort([
 			("mp.slug", flask_pymongo.ASCENDING)
 		])
 

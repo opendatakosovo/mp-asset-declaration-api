@@ -110,6 +110,8 @@ from views.party.year import PartyYear
 from views.mp.all import MP
 from views.mp.year import MPYear
 
+#TODO: Pagination, asset amount -based value search.
+
 
 def register_url_rules(app):
 	''' Register the URL rules. 
@@ -120,12 +122,12 @@ def register_url_rules(app):
 	# Show instructional index page.
 	app.add_url_rule('/', view_func=Index.as_view('index'))
 
-	# Get declarations of a given MP
-	app.add_url_rule('/mp/<string:mp_name_slug>', view_func=MP.as_view('mp'))
-	app.add_url_rule('/mp/<int:year>/<string:mp_name_slug>', view_func=MPYear.as_view('mp_year'))
-
 	# Get declarations of a all members of a giveb party.
 	app.add_url_rule('/party/<string:party_slug>', view_func=Party.as_view('party'))
 	app.add_url_rule('/party/<int:year>/<string:party_slug>', view_func=PartyYear.as_view('party_year'))
+
+	# Get declarations of a given MP
+	app.add_url_rule('/party/<string:party_slug>/mp/<string:mp_name_slug>', view_func=MP.as_view('mp'))
+	app.add_url_rule('/party/<int:year>/<string:party_slug>/mp/<string:mp_name_slug>', view_func=MPYear.as_view('mp_year'))
 
 	

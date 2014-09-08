@@ -16,9 +16,7 @@ class MPYear(View):
 		'''
 		query = {'mp.slug': mp_name_slug, 'year': year}
 
-		declaration = mongo.db.mpassetdeclarations.find_one(query).sort([
-			("mp.slug", flask_pymongo.ASCENDING)
-		])
+		declaration = mongo.db.mpassetdeclarations.find_one(query)
 
 		# Build response object				
 		resp = Response(response=json_util.dumps(declaration), mimetype='application/json')
