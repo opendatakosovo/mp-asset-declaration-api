@@ -178,10 +178,24 @@ class DeclarationAggregate(View):
                         'total': '$annualSalaryHonorariumsTotal',
                     },
                     'totals': {
-                        'individual': '$totalIndividual',
-                        'joint': '$totalJoint',
-                        'total': '$total'
+                        'individual': {'$add': [
+                            '$annualSalaryRegularIndividual',
+                            '$annualSalaryHonorariumsIndividual'
+                        ]},
+                        'joint': {'$add': [
+                            '$annualSalaryRegularJoint',
+                            '$annualSalaryHonorariumsJoint'
+                        ]},
+                        'total': {'$add': [
+                            '$annualSalaryRegularTotal',
+                            '$annualSalaryHonorariumsTotal'
+                        ]},
                     }
+                },
+                'totals': {
+                    'individual': '$totalIndividual',
+                    'joint': '$totalJoint',
+                    'total': '$total'
                 }
             }
         }
