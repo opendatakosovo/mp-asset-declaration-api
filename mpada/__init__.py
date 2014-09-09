@@ -105,7 +105,8 @@ from views.index import Index
 # Party views.
 from views.party.all import Party
 from views.party.year import PartyYear
-from views.party.aggregate import PartyAggregate
+from views.aggregate.party import PartyAggregate
+from views.aggregate.mp import MPAggregate
 
 # MP views.
 from views.mp.all import MP
@@ -132,3 +133,4 @@ def register_url_rules(app):
 	app.add_url_rule('/party/<int:year>/<string:party_slug>/mp/<string:mp_name_slug>', view_func=MPYear.as_view('mp_year'))
 
 	app.add_url_rule('/aggregate/party/<string:party_slug>', view_func=PartyAggregate.as_view('party_aggregate'))
+	app.add_url_rule('/aggregate/party/<string:party_slug>/mp/<string:mp_name_slug>', view_func=MPAggregate.as_view('mp_aggregate'))
