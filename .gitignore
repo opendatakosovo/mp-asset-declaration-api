@@ -1,6 +1,7 @@
 venv/
 *.*~
 config.cfg
+*.sublime-workspace
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
