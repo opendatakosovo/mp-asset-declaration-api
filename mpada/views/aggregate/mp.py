@@ -8,14 +8,14 @@ from declaration import DeclarationAggregate
 
 class MPAggregate(DeclarationAggregate):
 
-    def dispatch_request(self, party_slug, mp_name_slug):
+    def dispatch_request(self, party_slug, mp_slug):
         ''' Get the asset declaration of an MP for the given Party and MP slugs.
         :param party_slug: slug value of the Party.
         :param party_slug: slug value of the MP.
         '''
 
         # Query.
-        query = self.get_query(party_slug, mp_name_slug)
+        query = self.get_query(party_slug, mp_slug)
 
         # Group.
         group = self.get_group()
@@ -41,7 +41,7 @@ class MPAggregate(DeclarationAggregate):
         # Return response.
         return resp
 
-    def get_query(self, party_slug, mp_name_slug):
+    def get_query(self, party_slug, mp_slug):
         '''Build and return the query object to be used in aggregation pipeline.
         :param party_slug: name slug of a party.
         :param mp_name_slug: name slug of an MP.
@@ -49,7 +49,7 @@ class MPAggregate(DeclarationAggregate):
 
         query = {"$match": {
             "party.slug": party_slug,
-            'mp.slug': mp_name_slug
+            'mp.slug': mp_slug
         }}
 
         return query

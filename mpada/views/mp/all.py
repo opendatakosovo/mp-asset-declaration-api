@@ -10,11 +10,14 @@ class MP(View):
 
     methods = ['GET']
 
-    def dispatch_request(self, mp_name_slug):
+    def dispatch_request(self, party_slug, mp_slug):
         ''' Get the asset declaration for a given MP.
-        :param mp_name_slug: slug value of the MP's name.
+        :param mp_slug: slug value of the MP's name.
         '''
-        query = {'mp.slug': mp_name_slug}
+        query = {
+            'party.slug': party_slug,
+            'mp.slug': mp_slug
+        }
 
         declarations = mongo.db.mpassetdeclarations.find(query).sort([
             ("year", flask_pymongo.DESCENDING),

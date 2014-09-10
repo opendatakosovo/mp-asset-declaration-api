@@ -33,7 +33,7 @@ class DeclarationAggregate(View):
                 'realEstateJoint': {
                     '$sum': '$realEstate.joint'
                 },
-                'realEstateJoint': {
+                'realEstateTotal': {
                     '$sum': '$realEstate.total'
                 },
 

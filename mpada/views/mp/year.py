@@ -9,12 +9,17 @@ class MPYear(View):
 
     methods = ['GET']
 
-    def dispatch_request(self, year, mp_name_slug):
+    def dispatch_request(self, year, party_slug, mp_slug):
         ''' Get the asset declaration for a given MP.
         :param year: year of the asset declaration.
-        :param mp_name_slug: slug value of the MP's name.
+        :param party_slug: slug value of the Party's name.
+        :param mp_slug: slug value of the MP's name.
         '''
-        query = {'mp.slug': mp_name_slug, 'year': year}
+        query = {
+            'year': year,
+            'party.slug': party_slug,
+            'mp.slug': mp_slug
+        }
 
         declaration = mongo.db.mpassetdeclarations.find_one(query)
 

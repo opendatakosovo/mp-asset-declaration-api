@@ -127,28 +127,29 @@ def register_url_rules(app):
     # Show instructional index page.
     app.add_url_rule('/', view_func=Index.as_view('index'))
 
-    # Get declarations of a all members of a giveb party.
+    # Get aggregate declarations
     app.add_url_rule(
-        '/party/<string:party_slug>',
+        '/aggregate/<string:party_slug>',
+        view_func=PartyAggregate.as_view('party_aggregate'))
+
+    app.add_url_rule(
+        '/aggregate/<string:party_slug>/<string:mp_slug>',
+        view_func=MPAggregate.as_view('mp_aggregate'))
+
+    # Get declarations of a all members of a given party.
+    app.add_url_rule(
+        '/<string:party_slug>',
         view_func=Party.as_view('party'))
 
     app.add_url_rule(
-        '/party/<int:year>/<string:party_slug>',
+        '/<int:year>/<string:party_slug>',
         view_func=PartyYear.as_view('party_year'))
 
     # Get declarations of a given MP
     app.add_url_rule(
-        '/party/<string:party_slug>/mp/<string:mp_name_slug>',
+        '/<string:party_slug>/<string:mp_slug>',
         view_func=MP.as_view('mp'))
 
     app.add_url_rule(
-        '/party/<int:year>/<string:party_slug>/mp/<string:mp_name_slug>',
+        '/<int:year>/<string:party_slug>/<string:mp_slug>',
         view_func=MPYear.as_view('mp_year'))
-
-    app.add_url_rule(
-        '/aggregate/party/<string:party_slug>',
-        view_func=PartyAggregate.as_view('party_aggregate'))
-
-    app.add_url_rule(
-        '/aggregate/party/<string:party_slug>/mp/<string:mp_name_slug>',
-        view_func=MPAggregate.as_view('mp_aggregate'))
