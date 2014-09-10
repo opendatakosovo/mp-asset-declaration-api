@@ -1,30 +1,71 @@
 from flask.views import View
-import flask_pymongo
-
+from flask import Response
+from bson import json_util
 from bson.son import SON
 
+from mpada import mongo
 
-class DeclarationAggregate(View):
+import flask_pymongo
+
+
+class PartyMPAggregate(View):
 
     methods = ['GET']
 
-    def get_sort(self):
-        ''' Build and return the sort object to be used in aggregation pipeline.
+    def dispatch_request(self, party_slug):
+        ''' Get the asset declaration of a Party for the given Party slug.
+        :param party_slug: slug value of the Party.
         '''
-        sort = {
-            '$sort': SON([
-                ('_id', flask_pymongo.DESCENDING)
-            ])
-        }
 
-        return sort
+        # Match.
+        match = self.get_match(party_slug)
+
+        # Group.
+        group = self.get_group()
+
+        # Sort.
+        sort = self.get_sort()
+
+        # Projection.
+        #project = self.get_projection()
+
+        # Execute aggregate query.
+        declarations = mongo.db.mpassetdeclarations.aggregate([
+            match,
+            group,
+            sort
+        ])
+
+        # Build response object.
+        resp = Response(
+            response=json_util.dumps(declarations), mimetype='application/json')
+
+        # Return response.
+        return resp
+
+    def get_match(self, party_slug):
+        '''Build and return the query object to be used in aggregation pipeline.
+        :param party_slug: name slug of a party.
+        '''
+
+        match = {"$match": {
+            "party.slug": party_slug
+        }}
+
+        return match
 
     def get_group(self):
         ''' Build and return the group object to be used in aggregation pipeline.
         '''
         group = {
             '$group': {
-                '_id': '$year',
+                '_id': {
+                    'year': '$year',
+                    'mp': {
+                        'name': '$mp.name',
+                        'slug': '$mp.slug'
+                    }
+                },
 
                 # Total real estate assets.
                 'realEstateIndividual': {
@@ -129,13 +170,26 @@ class DeclarationAggregate(View):
 
         return group
 
+    def get_sort(self):
+        ''' Build and return the sort object to be used in aggregation pipeline.
+        '''
+        sort = {
+            '$sort': SON([
+                ('_id.mp.slug', flask_pymongo.ASCENDING),
+                ('_id.year', flask_pymongo.DESCENDING)
+
+            ])
+        }
+
+        return sort
+
     def get_projection(self):
-        ''' Get the projection object to be used in aggregation pipeline.
+        ''' Get the projection object to be used in the aggregation pipeline.
         '''
         project = {
             '$project': {
                 '_id': 0,  # hide _id field
-                'year': '$_id',
+                'name': '$_id',
                 'realEstate': {
                     'individual': '$realEstateIndividual',
                     'joint': '$realEstateJoint',

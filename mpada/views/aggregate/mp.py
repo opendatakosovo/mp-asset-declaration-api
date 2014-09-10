@@ -14,8 +14,8 @@ class MPAggregate(DeclarationAggregate):
         :param party_slug: slug value of the MP.
         '''
 
-        # Query.
-        query = self.get_query(party_slug, mp_slug)
+        # Match.
+        match = self.get_match(party_slug, mp_slug)
 
         # Group.
         group = self.get_group()
@@ -26,9 +26,9 @@ class MPAggregate(DeclarationAggregate):
         # Projection.
         project = self.get_projection()
 
-        # Execute query.
+        # Execute aggregate query.
         declarations = mongo.db.mpassetdeclarations.aggregate([
-            query,
+            match,
             group,
             sort,
             project
@@ -41,15 +41,15 @@ class MPAggregate(DeclarationAggregate):
         # Return response.
         return resp
 
-    def get_query(self, party_slug, mp_slug):
-        '''Build and return the query object to be used in aggregation pipeline.
+    def get_match(self, party_slug, mp_slug):
+        '''Build and return the match object to be used in aggregation pipeline.
         :param party_slug: name slug of a party.
         :param mp_name_slug: name slug of an MP.
         '''
 
-        query = {"$match": {
+        match = {"$match": {
             "party.slug": party_slug,
             'mp.slug': mp_slug
         }}
 
-        return query
+        return match
