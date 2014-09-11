@@ -112,6 +112,12 @@ from views.aggregate.party import PartyAggregate
 from views.aggregate.mp import MPAggregate
 from views.aggregate.partymembers import PartyMPAggregate
 
+from views.median.all import AllMedian
+from views.median.year import YearMedian
+from views.median.party import PartyMedian
+from views.median.partyyear import PartyYearMedian
+
+
 # MP views.
 from views.mp.all import MP
 from views.mp.year import MPYear
@@ -128,7 +134,17 @@ def register_url_rules(app):
     # Show instructional index page.
     app.add_url_rule('/', view_func=Index.as_view('index'))
 
-    # Get aggregate declarations
+    # Register the URL rules.
+    register_aggregate_url_rules(app)
+    register_medians_url_rules(app)
+    register_party_url_rules(app)
+    register_mp_url_rules(app)
+
+
+def register_aggregate_url_rules(app):
+    '''URL rules to get asset aggregate declarations (sums).
+    :param app: the application instance
+    '''
     app.add_url_rule(
         '/aggregate/members/<string:party_slug>',
         view_func=PartyMPAggregate.as_view('party_mp_aggregate'))
@@ -141,7 +157,32 @@ def register_url_rules(app):
         '/aggregate/<string:party_slug>/<string:mp_slug>',
         view_func=MPAggregate.as_view('mp_aggregate'))
 
-    # Get declarations of a all members of a given party.
+
+def register_medians_url_rules(app):
+    '''URL rules to get asset declaration medians.
+    :param app: the application instance
+    '''
+    app.add_url_rule(
+        '/medians',
+        view_func=AllMedian.as_view('medians'))
+
+    app.add_url_rule(
+        '/medians/<int:year>',
+        view_func=YearMedian.as_view('medians_year'))
+
+    app.add_url_rule(
+        '/medians/<string:party_slug>',
+        view_func=PartyMedian.as_view('medians_party'))
+
+    app.add_url_rule(
+        '/medians/<int:year>/<string:party_slug>',
+        view_func=PartyYearMedian.as_view('medians_party_year'))
+
+
+def register_party_url_rules(app):
+    '''URL rules to get asset declarations of a all MPs of a given Party.
+    :param app: the application instance
+    '''
     app.add_url_rule(
         '/<string:party_slug>',
         view_func=Party.as_view('party'))
@@ -150,7 +191,11 @@ def register_url_rules(app):
         '/<int:year>/<string:party_slug>',
         view_func=PartyYear.as_view('party_year'))
 
-    # Get declarations of a given MP
+
+def register_mp_url_rules(app):
+    '''URL rules to get asset declarations of a given MP.
+    :param app: the application instance
+    '''
     app.add_url_rule(
         '/<string:party_slug>/<string:mp_slug>',
         view_func=MP.as_view('mp'))
