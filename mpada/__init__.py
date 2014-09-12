@@ -146,19 +146,19 @@ def register_aggregate_median_url_rules(app):
     :param app: the application instance
     '''
     app.add_url_rule(
-        '/aggregate/medians',
+        '/aggregate/median',
         view_func=AllMedian.as_view('medians'))
 
     app.add_url_rule(
-        '/aggregate/medians/<int:year>',
+        '/aggregate/median/<int:year>',
         view_func=YearMedian.as_view('medians_year'))
 
     app.add_url_rule(
-        '/aggregate/medians/<string:party_slug>',
+        '/aggregate/median/<string:party_slug>',
         view_func=PartyMedian.as_view('medians_party'))
 
     app.add_url_rule(
-        '/aggregate/medians/<int:year>/<string:party_slug>',
+        '/aggregate/median/<int:year>/<string:party_slug>',
         view_func=PartyYearMedian.as_view('medians_party_year'))
 
 
