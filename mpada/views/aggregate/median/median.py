@@ -18,9 +18,6 @@ class MedianAggregate(View):
 
         for declaration in declarations:
 
-            # First, let's caculate medians for annual salary totals because
-            # We cou
-
             median = {
                 "year": declaration['year'],
                 "party": {
