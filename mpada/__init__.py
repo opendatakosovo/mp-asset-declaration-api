@@ -113,21 +113,23 @@ from views.index import Index
 from views.party.all import Party
 from views.party.year import PartyYear
 
-from views.aggregate.party import PartyAggregate
-from views.aggregate.mp import MPAggregate
-from views.aggregate.declaredyears import DeclararedYearsAggregate
+# Aggregate Views
+from views.aggregate.declaration.party import PartyAggregate
+from views.aggregate.declaration.mp import MPAggregate
 
+# Aggregate Views to get declaring parties, their MPs, and their declaration years.
+from views.aggregate.declaredyears import DeclararedYearsAggregate
+from views.aggregate.mpsgroupedbyparties import DeclararedPartyMPsAggregate
+
+# Aggregate Views for Median
 from views.aggregate.median.all import AllMedian
 from views.aggregate.median.year import YearMedian
 from views.aggregate.median.party import PartyMedian
 from views.aggregate.median.partyyear import PartyYearMedian
 
-
 # MP views.
 from views.mp.all import MP
 from views.mp.year import MPYear
-
-#TODO: Pagination, asset amount -based value search.
 
 
 def register_url_rules(app):
@@ -141,7 +143,11 @@ def register_url_rules(app):
 
     app.add_url_rule(
         '/aggregate/declared-years/<string:party_slug>',
-        view_func=DeclararedYearsAggregate.as_view('active_years'))
+        view_func=DeclararedYearsAggregate.as_view('declared_years'))
+
+    app.add_url_rule(
+        '/aggregate/mps-grouped-by-parties',
+        view_func=DeclararedPartyMPsAggregate.as_view('mps_grouped_by_parties'))
 
     # Register the URL rules.
     register_aggregate_median_url_rules(app)

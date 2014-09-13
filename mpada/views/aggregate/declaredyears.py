@@ -96,7 +96,7 @@ class DeclararedYearsAggregate(View):
         '''
         sort = {
             '$sort': SON([
-                ('_id', flask_pymongo.ASCENDING)
+                ('_id.mp.slug', flask_pymongo.ASCENDING)
             ])
         }
 
