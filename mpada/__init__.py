@@ -7,10 +7,14 @@ from logging.handlers import RotatingFileHandler
 
 from flask import Flask
 from flask.ext.pymongo import PyMongo
+from utils.utils import Utils
 
 
 # Create MongoDB database object.
 mongo = PyMongo()
+
+# Create the utils object
+utils = Utils()
 
 
 def create_app():
@@ -111,6 +115,7 @@ from views.party.year import PartyYear
 
 from views.aggregate.party import PartyAggregate
 from views.aggregate.mp import MPAggregate
+from views.aggregate.declaredyears import DeclararedYearsAggregate
 
 from views.aggregate.median.all import AllMedian
 from views.aggregate.median.year import YearMedian
@@ -133,6 +138,10 @@ def register_url_rules(app):
 
     # Show instructional index page.
     app.add_url_rule('/', view_func=Index.as_view('index'))
+
+    app.add_url_rule(
+        '/aggregate/declared-years/<string:party_slug>',
+        view_func=DeclararedYearsAggregate.as_view('active_years'))
 
     # Register the URL rules.
     register_aggregate_median_url_rules(app)
