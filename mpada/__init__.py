@@ -116,6 +116,7 @@ from views.party.year import PartyYear
 # Aggregate Views
 from views.aggregate.sum.party import PartySumAggregate
 from views.aggregate.sum.mp import MPSumAggregate
+from views.aggregate.sum.all import AllSumAggregate
 
 # Aggregate Views to get declaring parties, their MPs, and their declaration years.
 from views.aggregate.yearspartiesdeclared import YearsPartiesDeclaredAggregate
@@ -194,6 +195,10 @@ def register_aggregate_sum_url_rules(app):
     '''URL rules to get asset aggregate declaration sums.
     :param app: the application instance
     '''
+    app.add_url_rule(
+        '/aggregate/sum',
+        view_func=AllSumAggregate.as_view('sum_aggregate'))
+
     app.add_url_rule(
         '/aggregate/sum/<string:party_slug>',
         view_func=PartySumAggregate.as_view('party_aggregate'))
