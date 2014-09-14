@@ -2,10 +2,10 @@ from flask import Response
 from bson import json_util
 
 from mpada import mongo
-from declaration import DeclarationAggregate
+from declaration import DeclarationSumAggregate
 
 
-class PartyAggregate(DeclarationAggregate):
+class PartySumAggregate(DeclarationSumAggregate):
 
     def dispatch_request(self, party_slug):
         ''' Get the asset declaration of a Party for the given Party slug.

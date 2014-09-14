@@ -3,10 +3,10 @@ from bson import json_util
 
 
 from mpada import mongo
-from declaration import DeclarationAggregate
+from declaration import DeclarationSumAggregate
 
 
-class MPAggregate(DeclarationAggregate):
+class MPSumAggregate(DeclarationSumAggregate):
 
     def dispatch_request(self, party_slug, mp_slug):
         ''' Get the asset declaration of an MP for the given Party and MP slugs.

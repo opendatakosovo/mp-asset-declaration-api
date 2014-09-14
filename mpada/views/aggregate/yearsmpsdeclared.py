@@ -9,17 +9,17 @@ from mpada import mongo
 import flask_pymongo
 
 
-class DeclararedYearsAggregate(View):
+class YearsMPsDeclaredAggregate(View):
 
     methods = ['GET']
 
-    def dispatch_request(self, party_slug):
+    def dispatch_request(self, party_slug, mp_slug=None):
         ''' Get the asset declaration of a Party for the given Party slug.
         :param party_slug: slug value of the Party.
         '''
 
         # Match
-        match = self.get_match(party_slug)
+        match = self.get_match(party_slug, mp_slug)
 
         # Group.
         group = self.get_group()
@@ -40,19 +40,26 @@ class DeclararedYearsAggregate(View):
 
         mps = []
         years = Set()
+        resp_json = ()
 
         for declaration in declarations['result']:
             mps.append(declaration['mp']['name'])
             for year in declaration['years']:
                 years.add(year)
 
-        resp_json = {
-            'declared': {
-                'mps': mps,
-                'years': years,
-            },
-            'yearsDeclaredPerMPs': declarations['result']
-        }
+        if not mp_slug:
+            resp_json = {
+                'declared': {
+                    'mps': mps,
+                    'years': years,
+                },
+                'yearsDeclaredPerMPs': declarations['result']
+            }
+        else:
+            # If we are only retrieving declaration years for one PM
+            # then there is no need to list MPs, just grab first list object
+            # and return that.
+            resp_json = declarations['result'][0]
 
         # Build response object.
         resp = Response(
@@ -61,14 +68,22 @@ class DeclararedYearsAggregate(View):
         # Return response.
         return resp
 
-    def get_match(self, party_slug):
+    def get_match(self, party_slug, mp_slug):
         '''Build and return the match object to be used in aggregation pipeline.
         :param party_slug: name slug of a party.
         '''
 
-        match = {"$match": {
-            "party.slug": party_slug
-        }}
+        match = {}
+
+        if not mp_slug:
+            match = {"$match": {
+                "party.slug": party_slug
+            }}
+        else:
+            match = {"$match": {
+                "party.slug": party_slug,
+                "mp.slug": mp_slug
+            }}
 
         return match
 

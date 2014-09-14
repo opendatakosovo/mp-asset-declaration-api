@@ -114,11 +114,12 @@ from views.party.all import Party
 from views.party.year import PartyYear
 
 # Aggregate Views
-from views.aggregate.declaration.party import PartyAggregate
-from views.aggregate.declaration.mp import MPAggregate
+from views.aggregate.sum.party import PartySumAggregate
+from views.aggregate.sum.mp import MPSumAggregate
 
 # Aggregate Views to get declaring parties, their MPs, and their declaration years.
-from views.aggregate.declaredyears import DeclararedYearsAggregate
+from views.aggregate.yearspartiesdeclared import YearsPartiesDeclaredAggregate
+from views.aggregate.yearsmpsdeclared import YearsMPsDeclaredAggregate
 from views.aggregate.mpsgroupedbyparties import DeclararedPartyMPsAggregate
 
 # Aggregate Views for Median
@@ -141,9 +142,7 @@ def register_url_rules(app):
     # Show instructional index page.
     app.add_url_rule('/', view_func=Index.as_view('index'))
 
-    app.add_url_rule(
-        '/aggregate/declared-years/<string:party_slug>',
-        view_func=DeclararedYearsAggregate.as_view('declared_years'))
+    register_aggregate_declaration_years_url_rules(app)
 
     app.add_url_rule(
         '/aggregate/mps-grouped-by-parties',
@@ -154,6 +153,20 @@ def register_url_rules(app):
     register_aggregate_sum_url_rules(app)
     register_party_url_rules(app)
     register_mp_url_rules(app)
+
+
+def register_aggregate_declaration_years_url_rules(app):
+    app.add_url_rule(
+        '/aggregate/years-mps-declared/<string:party_slug>',
+        view_func=YearsMPsDeclaredAggregate.as_view('years-mps-declared'))
+
+    app.add_url_rule(
+        '/aggregate/years-mps-declared/<string:party_slug>/<string:mp_slug>',
+        view_func=YearsMPsDeclaredAggregate.as_view('years-mp-declared'))
+
+    app.add_url_rule(
+        '/aggregate/years-parties-declared',
+        view_func=YearsPartiesDeclaredAggregate.as_view('years-parties-declared'))
 
 
 def register_aggregate_median_url_rules(app):
@@ -183,11 +196,11 @@ def register_aggregate_sum_url_rules(app):
     '''
     app.add_url_rule(
         '/aggregate/sum/<string:party_slug>',
-        view_func=PartyAggregate.as_view('party_aggregate'))
+        view_func=PartySumAggregate.as_view('party_aggregate'))
 
     app.add_url_rule(
         '/aggregate/sum/<string:party_slug>/<string:mp_slug>',
-        view_func=MPAggregate.as_view('mp_aggregate'))
+        view_func=MPSumAggregate.as_view('mp_aggregate'))
 
 
 def register_party_url_rules(app):

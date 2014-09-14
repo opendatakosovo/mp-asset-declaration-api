@@ -4,7 +4,7 @@ import flask_pymongo
 from bson.son import SON
 
 
-class DeclarationAggregate(View):
+class DeclarationSumAggregate(View):
 
     methods = ['GET']
 
@@ -136,6 +136,8 @@ class DeclarationAggregate(View):
             '$project': {
                 '_id': 0,  # hide _id field
                 'year': '$_id',
+                'party': '$party',
+                'mp': '$sum',
                 'realEstate': {
                     'individual': '$realEstateIndividual',
                     'joint': '$realEstateJoint',
