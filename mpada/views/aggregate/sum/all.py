@@ -1,4 +1,4 @@
-from flask import Response
+from flask import Response, request
 from flask.views import View
 
 from bson import json_util
@@ -11,25 +11,37 @@ from mpada import mongo
 
 class AllSumAggregate(View):
 
+    methods = ['GET']
+
     def dispatch_request(self):
         ''' Get the asset declaration of a Party for the given Party slug.
         :param party_slug: slug value of the Party.
         '''
+
+        ''' Get the median asset declaration for all parties.
+        '''
+        aggregate_pipeline = []
+
+        parties_string = request.args.get('parties', '')
+        if parties_string != '':
+            party_slugs = parties_string.split(',')
+            match = self.get_match(party_slugs)
+            aggregate_pipeline.append(match)
+
         # Group.
         group = self.get_group()
+        aggregate_pipeline.append(group)
 
         # Sort.
         sort = self.get_sort()
+        aggregate_pipeline.append(sort)
 
         # Projection.
         project = self.get_projection()
+        aggregate_pipeline.append(project)
 
         # Execute aggregate query.
-        declarations = mongo.db.mpassetdeclarations.aggregate([
-            group,
-            sort,
-            project
-        ])
+        declarations = mongo.db.mpassetdeclarations.aggregate(aggregate_pipeline)
 
         results = declarations['result']
 
@@ -40,7 +52,15 @@ class AllSumAggregate(View):
         # Return response.
         return resp
 
-    methods = ['GET']
+    def get_match(self, party_slugs):
+        '''Build and return the match object to be used in aggregation pipeline.
+        :param party_slugs: list of party slugs we want to process
+        '''
+        match = {"$match": {
+            "party.slug": {"$in": party_slugs}
+        }}
+
+        return match
 
     def get_sort(self):
         ''' Build and return the sort object to be used in aggregation pipeline.

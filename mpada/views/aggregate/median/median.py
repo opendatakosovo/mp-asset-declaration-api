@@ -8,6 +8,17 @@ class MedianAggregate(View):
 
     methods = ['GET']
 
+    def get_match(self, party_slugs):
+        '''Build and return the match object to be used in aggregation pipeline.
+        :param party_slugs: list of party slugs we want to process
+        '''
+        match = {"$match": {
+            "party.slug": {"$in": party_slugs}
+        }}
+
+
+        return match
+
     def build_median_documents(self, declarations):
         ''' Build the documents containing the median assets for each asset source.
         :param declarations: the aggregation response listing all assets grouped by Party.
