@@ -1,4 +1,121 @@
 {% extends "layout.html" %}
 {% block body %}
-Kosovo Assembly MPs Asset Declaration API
+
+
+
+<h3>Kosovo Assembly MP Asset Declaration API</h3>
+<hr/>
+
+<p>
+    <a href="http://www.md-ks.org/repository/docs/declaration_origin_and_controle.pdf">LAW No. 04/L-050</a> "defines obligations of senior public officials to declare their property, revenues and the origin and obligation of Agency to control declared property and origin of property as well as obligations of all public senior officials to declare gifts and the origin of gifts."
+<p>
+    This Application Programming Interface (API) gives software developers access to the Asset Declrations of the Kosovo Assembly's MPs. This data is compiled by <a href="http://www.demokracianeveprim.org/en/">Democracy for Action (D4D)</a>.
+</p>
+<p>
+    We care about sharing and improvements so the software behind this API is free and open under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU GPL v2.0</a> license. Anyone who distributes the code or a derivative work is required to make the source available under the same terms.
+</p>
+
+<br>
+
+<h3>Disclaimer</h3>
+<hr/>
+
+<p>
+    This API is an <a href="http://en.wiktionary.org/wiki/alpha_version">alpha version</a>. This means that it is still under development and may be subject to bugs. You can help by <a href="mailto:info@opendatakosovo.org"/>contacting us</a> to report issues or contribute fixes and improvements to the <a href="https://github.com/opendatakosovo/mp-asset-declaration-api">code base</a>.
+</p>
+
+<br>
+
+<h3>Getting Data</h3>
+<hr/>
+
+<p>
+    Retrieving data from the API is done through <a href="http://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> HTTP GET Requests.
+</p>
+<br>
+<h4>MPs Grouped By Parties</h4>
+<strong>Get all MPs and group them by the Parties they are affiliated with:</strong><br>
+/aggregate/mps-grouped-by-parties<br><br><br>
+
+
+<h4>Declaration Years</h4>
+<strong>Get all the years in which a Party declared its assets:</strong><br>
+/aggregate/years-mps-declared/&lt;string:party_slug&gt;<br><br>
+
+<strong>Get all the years in which a specific Party member declared his assets:</strong><br>
+/aggregate/years-mps-declared/&lt;string:party_slug&gt;/&lt;string:mp_slug&gt;<br><br>
+
+<strong>Get all the years in which all Parties declared their assets:</strong><br>
+/aggregate/years-parties-declared<br><br><br>
+
+
+<h4>Asset Declarations</h4>
+<strong>Get the asset declarations for all the MPs in a given Party:</strong><br>
+/&lt;string:party_slug&gt;<br><br>
+
+<strong>Get the asset declarations for all MPs given Party for a specific year:</strong><br>
+/&lt;int:year&gt;/&lt;string:party_slug&gt;<br><br>
+
+<strong>Get the asset declarations for a specific MP in a given Party:</strong><br>
+/&lt;string:party_slug&gt;/&lt;string:mp_slug&gt;<br><br>
+
+<strong>Get the asset declarations for a specific MP in a given Party for a specfied year:</strong><br>
+/&lt;int:year&gt;/&lt;string:party_slug&gt;/&lt;string:mp_slug&gt;<br><br><br>
+
+
+<h4>Median Asset Declarations</h4>
+<strong>Get all median asset declarations through the years:</strong><br>
+/aggregate/median<br><br>
+
+<strong>Get the median asset declarations for a specific year:</strong><br>
+/aggregate/median/&lt;int:year&gt;<br><br>
+
+<strong>Get the median asset declarations for a specific Party:</strong><br>
+/aggregate/median/&lt;string:party_slug&gt;<br><br>
+
+<strong>Get the median asset declarations: for a specific Pary in a given year:</strong><br>
+/aggregate/median/&lt;int:year&gt;/&lt;string:party_slug&gt;<br><br><br>
+
+
+<h4>Aggregate Sum Asset Declarations</h4>
+<strong>Get the sum of all asset declarations through the years:</strong><br>
+/aggregate/sum<br><br>
+
+<strong>Get the sum of all asset declarations through the years for a specified party:</strong><br>
+/aggregate/sum/&lt;string:party_slug&gt;<br><br>
+
+<strong>Get the sum of all asset declarations through the years for a specified MP:</strong><br>
+/aggregate/sum/&lt;string:party_slug&gt;/&lt;string:mp_slug&gt;<br><br>
+
+
+<h3>Sample Requests</h3>
+<hr/>
+
+<p>
+    <strong>Get the years where MP Albin Kurti from VV declared his assets:</strong></br>
+    <a href="{{ config.BASE_PATH }}/aggregate/years-mps-declared/vv/albin-kurti">{{ config.BASE_PATH }}/aggregate/years-mps-declared/vv/albin-kurti</a>
+</p>
+
+<br>
+
+<p>
+    <strong>Get the 2104 asset declarations of all MPs who are members of VV:</strong></br>
+    <a href="{{ config.BASE_PATH }}/2014/vv">{{ config.BASE_PATH }}/2014/vv</a>
+</p>
+
+<br>
+
+<p>
+    <strong>Get the yearly asset declarations of VV Party member Albin Kurti:</strong></br>
+    <a href="{{ config.BASE_PATH }}/vv/albin-kurti">{{ config.BASE_PATH }}/vv/albin-kurti</a>
+</p>
+
+<br>
+
+<p>
+    <strong>Get the yearly aggregate sum of VV's members asset declarations:</strong></br>
+    <a href="{{ config.BASE_PATH }}/aggregate/sum/vv">{{ config.BASE_PATH }}/aggregate/sum/vv</a>
+</p>
+
+
 {% endblock %}
